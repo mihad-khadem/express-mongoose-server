@@ -1,6 +1,6 @@
 export type UserName = {
   firstName: string;
-  middleName: string;
+  middleName?: string;
   lastName: string;
 };
 
@@ -28,9 +28,9 @@ export type Student = {
   email: string;
   contactNo: string;
   emergencyContactNo: string;
-  bloogGroup?: "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-";
+  bloodGroup?: "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-";
   presentAddress: string;
-  permanentAddres: string;
+  permanentAddress: string; //
   guardian: Guardian;
   localGuardian: LocalGuardian;
   profileImg?: string;
