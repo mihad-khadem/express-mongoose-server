@@ -38,12 +38,17 @@ export type TStudent = {
   profileImg?: string;
   isActive: "active" | "blocked";
 };
+// for creating custom instance methods
+// export type TStudentMethods = {
+//   isUserExists(id: string): Promise<TStudent | null>;
+// };
+// export type TStudentModel = Model<
+//   TStudent,
+//   Record<string, never>,
+//   TStudentMethods
+// >;
 
-export type TStudentMethods = {
+// for creating static methods
+export interface StudentModel extends Model<TStudent> {
   isUserExists(id: string): Promise<TStudent | null>;
-};
-export type TStudentModel = Model<
-  TStudent,
-  Record<string, never>,
-  TStudentMethods
->;
+}
