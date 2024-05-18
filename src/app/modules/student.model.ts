@@ -1,14 +1,15 @@
 import { Schema, model } from "mongoose";
 import {
-  Guardian,
-  LocalGuardian,
-  Student,
-  UserName,
+  TGuardian,
+  TLocalGuardian,
+  TStudent,
+  TStudentMethods,
+  TStudentModel,
+  TUserName,
 } from "./student/student.interface";
-import { log } from "console";
 import validator from "validator";
 
-const userNameSchema = new Schema<UserName>({
+const userNameSchema = new Schema<TUserName>({
   firstName: {
     type: String,
     required: true,
@@ -32,7 +33,7 @@ const userNameSchema = new Schema<UserName>({
   },
 });
 
-const guardianSchema = new Schema<Guardian>({
+const guardianSchema = new Schema<TGuardian>({
   fatherName: { type: String, required: true },
   fatherOccupation: { type: String, required: true },
   fatherContactNo: { type: String, required: true },
@@ -41,14 +42,14 @@ const guardianSchema = new Schema<Guardian>({
   motherContactNo: { type: String, required: true },
 });
 
-const localGuardianSchema = new Schema<LocalGuardian>({
+const localGuardianSchema = new Schema<TLocalGuardian>({
   name: { type: String, required: true },
   occupation: { type: String, required: true },
   contactNo: { type: String, required: true },
   address: { type: String, required: true },
 });
 
-const studentSchema = new Schema<Student>({
+const studentSchema = new Schema<TStudent, TStudentModel, TStudentMethods>({
   id: { type: String, required: true, unique: true },
   name: { type: userNameSchema, required: true },
   gender: { type: String, enum: ["male", "female"], required: true },
@@ -56,9 +57,10 @@ const studentSchema = new Schema<Student>({
   email: {
     type: String,
     required: true,
+    unique: true,
     validate: {
       validator: (value: string) => validator.isEmail(value),
-      message: "{VALUE} is not alphanumeric",
+      message: "{VALUE} is not a valid email",
     },
   },
   contactNo: { type: String, required: true },
@@ -68,11 +70,17 @@ const studentSchema = new Schema<Student>({
     enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
   },
   presentAddress: { type: String, required: true },
-  permanentAddress: { type: String, required: true }, // Corrected field name
+  permanentAddress: { type: String, required: true },
   guardian: { type: guardianSchema, required: true },
   localGuardian: { type: localGuardianSchema, required: true },
   profileImg: { type: String },
   isActive: { type: String, enum: ["active", "blocked"], default: "active" },
 });
 
-export const StudentModel = model<Student>("Student", studentSchema);
+studentSchema.methods.isUserExists = async function (id: string) {
+  const existingStudent = await Student.findById(id);
+  console.log("model", existingStudent);
+
+  return existingStudent;
+};
+export const Student = model<TStudent, TStudentModel>("Student", studentSchema);
