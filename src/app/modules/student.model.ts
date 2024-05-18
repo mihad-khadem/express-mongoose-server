@@ -58,7 +58,7 @@ const studentSchema = new Schema<Student>({
     required: true,
     validate: {
       validator: (value: string) => validator.isEmail(value),
-      message: "{VALUE} is not valid",
+      message: "{VALUE} is not alphanumeric",
     },
   },
   contactNo: { type: String, required: true },
